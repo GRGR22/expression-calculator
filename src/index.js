@@ -1,10 +1,10 @@
-// function eval() {
-//     // Do not use eval!!!
-//     return;
-// }
+function eval() {
+    // Do not use eval!!!
+    return;
+}
 
 function expressionCalculator(expr) {
-    let exprArr = expr.split(' ');
+    let exprArr = expr[0] == ' ' ? expr.split(' ') : expr.split('');
     let operator = {'+': 1, '-': 1, '(':0, ')':0, '*':2, '/':2};
     let outArr = [];
     let operStack = [];
@@ -15,16 +15,19 @@ function expressionCalculator(expr) {
             outArr.push(exprArr[i])
         } else if (operator.hasOwnProperty(exprArr[i])) {
             sortOperStack(exprArr[i])
-        }        
+        }  
+        console.log(outArr, operStack) ;     
     }
     if (operStack.length>0) {
-        for (let index = 0; index < operStack.length; index++) {
+        for (let index = 0; index <= operStack.length; index++) {
             outArr.push(operStack.pop());            
         }
     } 
 
     function sortOperStack (arg) {
-        if (arg == ")") {
+        if (arg == "(") {
+            operStack.push(arg);
+        } else if (arg == ")") {
             for (let index = operStack.length-1; index >= 0; index--) {
                 let remove = operStack.pop();
                 if (remove !="(") {
@@ -34,9 +37,14 @@ function expressionCalculator(expr) {
         } else if (operStack.length==0 || operator[operStack[operStack.length-1]] < operator[arg]) {            
             operStack.push(arg);
         } else if (operator[operStack[operStack.length-1]] >= operator[arg]) {
-            outArr.push(operStack.pop());
-            operStack.push(arg);
+            for (let index = operStack.length-1; index >= 0; index--) {
+                if (operator[operStack[index]] >= operator[arg]) {
+                    outArr.push(operStack.pop());
+                } else break;           
+            }
+            operStack.push(arg); 
         }
+        console.log('sortOperStack'+ outArr, operStack) ;
         return;
     }
 
@@ -54,9 +62,7 @@ function expressionCalculator(expr) {
                 case '/': res = n1 / n2; break;
                 }
                 stack.push(res);
-            } 
-                      
-        console.log (stack, n1, n2, res)
+            }                       
         }
         return res;
     }
@@ -64,7 +70,7 @@ function expressionCalculator(expr) {
     return calculate(outArr);
 }
 
-// module.exports = {
-//     expressionCalculator
-// }
-console.log(expressionCalculator(" 77 + 79 / 25 * (  64 * 63 - 89 * 14  ) * 49 "))
+module.exports = {
+    expressionCalculator
+}
+//console.log(expressionCalculator(" 31 * 21 + 14 / (  (  18 * 52 / (  43 - 74 / 89 - 12  ) + 8  ) + 3 / 0 + (  9 + 81 + 19 * 94 / (  0 * 71 + 53 - 20 * 94  )  )  ) "))
