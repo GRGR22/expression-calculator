@@ -4,7 +4,19 @@ function eval() {
 }
 
 function expressionCalculator(expr) {  
-    let operator = {'+': 1, '-': 1, '(':0, ')':0, '*':2, '/':2};  
+    let operator = {'+': 1, '-': 1, '(':0, ')':0, '*':2, '/':2}; 
+    let isPairedBrackets = countBrackets (expr);
+    function countBrackets (expr) {
+        let openBracket = 0;
+        let closeBracket = 0;
+        for (const key of expr) {  
+            console.log(key)          
+            if (key == '(') { openBracket++}
+            else if (key == ')') { closeBracket++}
+        }
+        return openBracket == closeBracket
+    };
+    console.log(isPairedBrackets)
     let exprArr = normalizeString(expr);    
     let outArr = [];
     let operStack = [];
@@ -75,10 +87,19 @@ function expressionCalculator(expr) {
         return res;
     }
     console.log (outArr, operStack) 
+    try {
+        if(isPairedBrackets) throw new Error ("ExpressionError: Brackets must be paired");
+        //if(!Number.isFinite(calculate(outArr))) throw new TypeError ("Division by zero.");        
+    }
+    catch(err) {
+        //console.error(err);
+        //return err;
+    }
+    
     return calculate(outArr);
 }
 
 module.exports = {
     expressionCalculator
 }
-//console.log(expressionCalculator(" (  96 / 83 - 53 - (  59 - 91 / 91 - 54  )  ) / (  75 + 4 / (  50 - 80 * 45 + 93 + 18  ) - 76 / 54  ) * 14 + 59 "))
+//console.log(expressionCalculator("((1 + 2 * 3"))
