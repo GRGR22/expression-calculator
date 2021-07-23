@@ -3,9 +3,9 @@ function eval() {
     return;
 }
 
-function expressionCalculator(expr) {
-    let exprArr = expr[0] == ' ' ? expr.split(' ') : expr.split('');
-    let operator = {'+': 1, '-': 1, '(':0, ')':0, '*':2, '/':2};
+function expressionCalculator(expr) {  
+    let operator = {'+': 1, '-': 1, '(':0, ')':0, '*':2, '/':2};  
+    let exprArr = normalizeString(expr);    
     let outArr = [];
     let operStack = [];
     console.log(exprArr)
@@ -44,8 +44,16 @@ function expressionCalculator(expr) {
             }
             operStack.push(arg); 
         }
-        console.log('sortOperStack'+ outArr, operStack) ;
         return;
+    }
+    function normalizeString(str) {
+        let newStr = '';
+        str = str.replace(/\s/g, '');
+        for (i=0; i<str.length; i++) {            
+            operator.hasOwnProperty(str[i]) ? newStr+=' '+str[i]+' ' : newStr+=str[i];
+            //console.log(newStr);
+        }
+        return newStr.split(' ');        
     }
 
     function calculate(arr) {
@@ -73,4 +81,4 @@ function expressionCalculator(expr) {
 module.exports = {
     expressionCalculator
 }
-//console.log(expressionCalculator(" 31 * 21 + 14 / (  (  18 * 52 / (  43 - 74 / 89 - 12  ) + 8  ) + 3 / 0 + (  9 + 81 + 19 * 94 / (  0 * 71 + 53 - 20 * 94  )  )  ) "))
+//console.log(expressionCalculator(" (  96 / 83 - 53 - (  59 - 91 / 91 - 54  )  ) / (  75 + 4 / (  50 - 80 * 45 + 93 + 18  ) - 76 / 54  ) * 14 + 59 "))
