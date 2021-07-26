@@ -9,26 +9,23 @@ function expressionCalculator(expr) {
     function countBrackets (expr) {
         let openBracket = 0;
         let closeBracket = 0;
-        for (const key of expr) {  
-            console.log(key)          
+        for (const key of expr) {           
             if (key == '(') { openBracket++}
             else if (key == ')') { closeBracket++}
         }
         return openBracket == closeBracket
     };
-    console.log(isPairedBrackets)
+    if (!isPairedBrackets) throw new Error ("ExpressionError: Brackets must be paired");
     let exprArr = normalizeString(expr);    
     let outArr = [];
     let operStack = [];
-    console.log(exprArr)
     for (i=0; i<exprArr.length; i++) {
         if (!exprArr[i].length) continue;
         if (!isNaN(exprArr[i])) {
             outArr.push(exprArr[i])
         } else if (operator.hasOwnProperty(exprArr[i])) {
             sortOperStack(exprArr[i])
-        }  
-        console.log(outArr, operStack) ;     
+        }       
     }
     if (operStack.length>0) {
         for (let index = 0; index <= operStack.length; index++) {
@@ -63,7 +60,6 @@ function expressionCalculator(expr) {
         str = str.replace(/\s/g, '');
         for (i=0; i<str.length; i++) {            
             operator.hasOwnProperty(str[i]) ? newStr+=' '+str[i]+' ' : newStr+=str[i];
-            //console.log(newStr);
         }
         return newStr.split(' ');        
     }
@@ -79,22 +75,16 @@ function expressionCalculator(expr) {
                 case '+': res = n1 + n2; break;
                 case '-': res = n1 - n2; break;
                 case '*': res = n1 * n2; break;
-                case '/': res = n1 / n2; break;
+                case '/': 
+                if (n1==0 || n2==0) throw new TypeError('TypeError: Division by zero.'); 
+                res = n1 / n2; 
+                break;
                 }
                 stack.push(res);
             }                       
         }
         return res;
-    }
-    console.log (outArr, operStack) 
-    try {
-        if(isPairedBrackets) throw new Error ("ExpressionError: Brackets must be paired");
-        //if(!Number.isFinite(calculate(outArr))) throw new TypeError ("Division by zero.");        
-    }
-    catch(err) {
-        //console.error(err);
-        //return err;
-    }
+    }   
     
     return calculate(outArr);
 }
@@ -102,4 +92,3 @@ function expressionCalculator(expr) {
 module.exports = {
     expressionCalculator
 }
-//console.log(expressionCalculator("((1 + 2 * 3"))
